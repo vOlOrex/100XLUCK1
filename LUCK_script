@@ -1,1 +1,464 @@
-loadstring(game:HttpGet("https://paste.fe4r.click/raw/5befcaea-f8ef-46dd-9165-8f6c976b50aa"))()
+--[[
+    GHOST HUB - Discord Gate
+    Theme: Ghost Purple + Blue + Black
+]]
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+local DISCORD_LINK = "https://discord.gg/6793xXFTbu"
+
+-- ========== Clipboard Helper ==========
+local function copyToClipboard(text)
+    if setclipboard then
+        pcall(function() setclipboard(text) end)
+    elseif toclipboard then
+        pcall(function() toclipboard(text) end)
+    end
+end
+
+-- ========== Auto Copy on Load ==========
+copyToClipboard(DISCORD_LINK)
+
+-- ========== Cleanup Old UI ==========
+if playerGui:FindFirstChild("GhostGateUI") then
+    playerGui.GhostGateUI:Destroy()
+end
+
+-- ========== ScreenGui ==========
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "GhostGateUI"
+screenGui.ResetOnSpawn = false
+screenGui.IgnoreGuiInset = true
+screenGui.DisplayOrder = 999999
+screenGui.Parent = playerGui
+
+-- ========== Dimmer ==========
+local dimmer = Instance.new("Frame")
+dimmer.Name = "Dimmer"
+dimmer.Size = UDim2.new(1, 0, 1, 0)
+dimmer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+dimmer.BackgroundTransparency = 1
+dimmer.BorderSizePixel = 0
+dimmer.Parent = screenGui
+
+-- ========== Main Frame ==========
+local mainFrame = Instance.new("Frame")
+mainFrame.Name = "MainFrame"
+mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+mainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+mainFrame.Size = UDim2.new(0, 560, 0, 420)
+mainFrame.BackgroundColor3 = Color3.fromRGB(12, 10, 22)
+mainFrame.BorderSizePixel = 0
+mainFrame.ClipsDescendants = true
+mainFrame.Parent = screenGui
+
+local mainCorner = Instance.new("UICorner")
+mainCorner.CornerRadius = UDim.new(0, 18)
+mainCorner.Parent = mainFrame
+
+local mainStroke = Instance.new("UIStroke")
+mainStroke.Color = Color3.fromRGB(138, 43, 226)
+mainStroke.Thickness = 2
+mainStroke.Transparency = 0.1
+mainStroke.Parent = mainFrame
+
+local bgGradient = Instance.new("UIGradient")
+bgGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 15, 40)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(10, 8, 25)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(5, 10, 30))
+}
+bgGradient.Rotation = 135
+bgGradient.Parent = mainFrame
+
+-- ========== Glow ==========
+local glowFrame = Instance.new("Frame")
+glowFrame.Name = "Glow"
+glowFrame.Size = UDim2.new(1, 0, 0, 180)
+glowFrame.Position = UDim2.new(0, 0, 0, -60)
+glowFrame.BackgroundColor3 = Color3.fromRGB(138, 43, 226)
+glowFrame.BackgroundTransparency = 0.85
+glowFrame.BorderSizePixel = 0
+glowFrame.Parent = mainFrame
+
+local glowCorner = Instance.new("UICorner")
+glowCorner.CornerRadius = UDim.new(1, 0)
+glowCorner.Parent = glowFrame
+
+local glowGradient = Instance.new("UIGradient")
+glowGradient.Transparency = NumberSequence.new{
+    NumberSequenceKeypoint.new(0, 0),
+    NumberSequenceKeypoint.new(1, 1)
+}
+glowGradient.Rotation = 90
+glowGradient.Parent = glowFrame
+
+-- ========== Top Bar ==========
+local topBar = Instance.new("Frame")
+topBar.Name = "TopBar"
+topBar.Size = UDim2.new(1, 0, 0, 55)
+topBar.BackgroundTransparency = 1
+topBar.BorderSizePixel = 0
+topBar.Parent = mainFrame
+
+local logoCircle = Instance.new("Frame")
+logoCircle.Size = UDim2.new(0, 36, 0, 36)
+logoCircle.Position = UDim2.new(0, 22, 0, 12)
+logoCircle.BackgroundColor3 = Color3.fromRGB(138, 43, 226)
+logoCircle.BorderSizePixel = 0
+logoCircle.Parent = topBar
+
+local logoCircleCorner = Instance.new("UICorner")
+logoCircleCorner.CornerRadius = UDim.new(1, 0)
+logoCircleCorner.Parent = logoCircle
+
+local logoGradient = Instance.new("UIGradient")
+logoGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(30, 144, 255))
+}
+logoGradient.Rotation = 45
+logoGradient.Parent = logoCircle
+
+local logoText = Instance.new("TextLabel")
+logoText.Size = UDim2.new(1, 0, 1, 0)
+logoText.BackgroundTransparency = 1
+logoText.Text = "G"
+logoText.Font = Enum.Font.GothamBold
+logoText.TextSize = 20
+logoText.TextColor3 = Color3.fromRGB(255, 255, 255)
+logoText.Parent = logoCircle
+
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(0, 300, 0, 36)
+titleLabel.Position = UDim2.new(0, 70, 0, 12)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = "GHOST HUB"
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.TextSize = 18
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+titleLabel.Parent = topBar
+
+-- Close Button
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 32, 0, 32)
+closeBtn.Position = UDim2.new(1, -44, 0, 12)
+closeBtn.BackgroundColor3 = Color3.fromRGB(40, 30, 60)
+closeBtn.BorderSizePixel = 0
+closeBtn.Text = "✕"
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 14
+closeBtn.TextColor3 = Color3.fromRGB(200, 180, 255)
+closeBtn.AutoButtonColor = false
+closeBtn.Parent = topBar
+
+local closeCorner = Instance.new("UICorner")
+closeCorner.CornerRadius = UDim.new(0, 8)
+closeCorner.Parent = closeBtn
+
+-- Divider
+local divider = Instance.new("Frame")
+divider.Size = UDim2.new(1, -44, 0, 1)
+divider.Position = UDim2.new(0, 22, 0, 60)
+divider.BackgroundColor3 = Color3.fromRGB(138, 43, 226)
+divider.BackgroundTransparency = 0.6
+divider.BorderSizePixel = 0
+divider.Parent = mainFrame
+
+local dividerGradient = Instance.new("UIGradient")
+dividerGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(30, 144, 255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(138, 43, 226))
+}
+dividerGradient.Transparency = NumberSequence.new{
+    NumberSequenceKeypoint.new(0, 1),
+    NumberSequenceKeypoint.new(0.5, 0),
+    NumberSequenceKeypoint.new(1, 1)
+}
+dividerGradient.Parent = divider
+
+-- ========== Content ==========
+local contentFrame = Instance.new("Frame")
+contentFrame.Size = UDim2.new(1, -50, 1, -140)
+contentFrame.Position = UDim2.new(0, 25, 0, 75)
+contentFrame.BackgroundTransparency = 1
+contentFrame.Parent = mainFrame
+
+local welcomeLabel = Instance.new("TextLabel")
+welcomeLabel.Size = UDim2.new(1, 0, 0, 40)
+welcomeLabel.BackgroundTransparency = 1
+welcomeLabel.Text = "Welcome to GHOST HUB"
+welcomeLabel.Font = Enum.Font.GothamBold
+welcomeLabel.TextSize = 26
+welcomeLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+welcomeLabel.Parent = contentFrame
+
+local subtitleLabel = Instance.new("TextLabel")
+subtitleLabel.Size = UDim2.new(1, 0, 0, 24)
+subtitleLabel.Position = UDim2.new(0, 0, 0, 42)
+subtitleLabel.BackgroundTransparency = 1
+subtitleLabel.Text = "Join our Discord server to unlock the scripts"
+subtitleLabel.Font = Enum.Font.Gotham
+subtitleLabel.TextSize = 14
+subtitleLabel.TextColor3 = Color3.fromRGB(180, 170, 220)
+subtitleLabel.Parent = contentFrame
+
+-- Link Box
+local linkBox = Instance.new("Frame")
+linkBox.Size = UDim2.new(1, 0, 0, 50)
+linkBox.Position = UDim2.new(0, 0, 0, 85)
+linkBox.BackgroundColor3 = Color3.fromRGB(25, 20, 45)
+linkBox.BorderSizePixel = 0
+linkBox.Parent = contentFrame
+
+local linkBoxCorner = Instance.new("UICorner")
+linkBoxCorner.CornerRadius = UDim.new(0, 10)
+linkBoxCorner.Parent = linkBox
+
+local linkBoxStroke = Instance.new("UIStroke")
+linkBoxStroke.Color = Color3.fromRGB(138, 43, 226)
+linkBoxStroke.Thickness = 1
+linkBoxStroke.Transparency = 0.4
+linkBoxStroke.Parent = linkBox
+
+local linkText = Instance.new("TextLabel")
+linkText.Size = UDim2.new(1, -30, 1, 0)
+linkText.Position = UDim2.new(0, 15, 0, 0)
+linkText.BackgroundTransparency = 1
+linkText.Text = "discord.gg/6793xXFTbu"
+linkText.Font = Enum.Font.GothamMedium
+linkText.TextSize = 14
+linkText.TextColor3 = Color3.fromRGB(200, 180, 255)
+linkText.TextXAlignment = Enum.TextXAlignment.Left
+linkText.Parent = linkBox
+
+-- ========== Buttons Container ==========
+local buttonsContainer = Instance.new("Frame")
+buttonsContainer.Size = UDim2.new(1, 0, 0, 120)
+buttonsContainer.Position = UDim2.new(0, 0, 0, 160)
+buttonsContainer.BackgroundTransparency = 1
+buttonsContainer.Parent = contentFrame
+
+-- Copy Discord Button
+local copyBtn = Instance.new("TextButton")
+copyBtn.Size = UDim2.new(1, 0, 0, 50)
+copyBtn.Position = UDim2.new(0, 0, 0, 0)
+copyBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+copyBtn.BorderSizePixel = 0
+copyBtn.Text = "📋  Copy Discord Link"
+copyBtn.Font = Enum.Font.GothamBold
+copyBtn.TextSize = 15
+copyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+copyBtn.AutoButtonColor = false
+copyBtn.Parent = buttonsContainer
+
+local copyCorner = Instance.new("UICorner")
+copyCorner.CornerRadius = UDim.new(0, 10)
+copyCorner.Parent = copyBtn
+
+local copyGradient = Instance.new("UIGradient")
+copyGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(60, 70, 180)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(30, 144, 255))
+}
+copyGradient.Rotation = 0
+copyGradient.Parent = copyBtn
+
+local copyStroke = Instance.new("UIStroke")
+copyStroke.Color = Color3.fromRGB(120, 160, 255)
+copyStroke.Thickness = 1
+copyStroke.Transparency = 0.5
+copyStroke.Parent = copyBtn
+
+-- Start Button
+local startBtn = Instance.new("TextButton")
+startBtn.Size = UDim2.new(1, 0, 0, 50)
+startBtn.Position = UDim2.new(0, 0, 0, 62)
+startBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+startBtn.BorderSizePixel = 0
+startBtn.Text = "🚀  Start Scripts"
+startBtn.Font = Enum.Font.GothamBold
+startBtn.TextSize = 15
+startBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+startBtn.AutoButtonColor = false
+startBtn.Parent = buttonsContainer
+
+local startCorner = Instance.new("UICorner")
+startCorner.CornerRadius = UDim.new(0, 10)
+startCorner.Parent = startBtn
+
+local startGradient = Instance.new("UIGradient")
+startGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(110, 60, 220)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(80, 40, 200))
+}
+startGradient.Rotation = 0
+startGradient.Parent = startBtn
+
+local startStroke = Instance.new("UIStroke")
+startStroke.Color = Color3.fromRGB(180, 140, 255)
+startStroke.Thickness = 1
+startStroke.Transparency = 0.5
+startStroke.Parent = startBtn
+
+-- ========== Helpers ==========
+local function tween(obj, time, props)
+    local t = TweenService:Create(obj, TweenInfo.new(time, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), props)
+    t:Play()
+    return t
+end
+
+-- ========== Intro Animation ==========
+dimmer.BackgroundTransparency = 1
+tween(dimmer, 0.4, {BackgroundTransparency = 0.5})
+
+mainFrame.Position = UDim2.new(0.5, 0, 0.5, 50)
+mainFrame.Size = UDim2.new(0, 500, 0, 0)
+tween(mainFrame, 0.5, {
+    Position = UDim2.new(0.5, 0, 0.5, 0),
+    Size = UDim2.new(0, 560, 0, 420)
+})
+
+-- ========== Hover Effects ==========
+copyBtn.MouseEnter:Connect(function()
+    tween(copyBtn, 0.15, {Size = UDim2.new(1, 6, 0, 52)})
+end)
+copyBtn.MouseLeave:Connect(function()
+    tween(copyBtn, 0.15, {Size = UDim2.new(1, 0, 0, 50)})
+end)
+
+startBtn.MouseEnter:Connect(function()
+    tween(startBtn, 0.15, {Size = UDim2.new(1, 6, 0, 52)})
+end)
+startBtn.MouseLeave:Connect(function()
+    tween(startBtn, 0.15, {Size = UDim2.new(1, 0, 0, 50)})
+end)
+
+closeBtn.MouseEnter:Connect(function()
+    tween(closeBtn, 0.15, {BackgroundColor3 = Color3.fromRGB(220, 50, 80)})
+end)
+closeBtn.MouseLeave:Connect(function()
+    tween(closeBtn, 0.15, {BackgroundColor3 = Color3.fromRGB(40, 30, 60)})
+end)
+
+-- ========== Copy Button Logic ==========
+local copyCooldown = false
+copyBtn.MouseButton1Click:Connect(function()
+    if copyCooldown then return end
+    copyCooldown = true
+    copyToClipboard(DISCORD_LINK)
+    copyBtn.Text = "✓  Copied!"
+    tween(copyBtn, 0.2, {
+        UIGradient = copyGradient
+    })
+    copyGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(50, 200, 100)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(40, 180, 90))
+    }
+    task.wait(1.5)
+    copyGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(60, 70, 180)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(30, 144, 255))
+    }
+    copyBtn.Text = "📋  Copy Discord Link"
+    copyCooldown = false
+end)
+
+-- ========== Start Button Logic ==========
+local function closeUI()
+    tween(mainFrame, 0.4, {
+        Size = UDim2.new(0, 500, 0, 0),
+        Position = UDim2.new(0.5, 0, 0.5, 50)
+    })
+    tween(dimmer, 0.4, {BackgroundTransparency = 1})
+    task.wait(0.45)
+    screenGui:Destroy()
+end
+
+local function runScripts()
+    closeUI()
+
+    -- Script 1
+    local ok1, err1 = pcall(function()
+        loadstring(game:HttpGet("https://pastefy.app/0i20WrM2/raw"))()
+    end)
+    if not ok1 then
+        warn("[GHOST HUB] Script 1 failed:", err1)
+    end
+
+    -- Wait 10 seconds
+    task.wait(10)
+
+    -- Script 2
+    local ok2, err2 = pcall(function()
+        loadstring(game:HttpGet("https://paste.fe4r.click/raw/5befcaea-f8ef-46dd-9165-8f6c976b50aa"))()
+    end)
+    if not ok2 then
+        warn("[GHOST HUB] Script 2 failed:", err2)
+    end
+end
+
+startBtn.MouseButton1Click:Connect(function()
+    -- Visual feedback
+    startBtn.Text = "⏳  Starting..."
+    tween(startBtn, 0.15, {Size = UDim2.new(1, 10, 0, 54)})
+    task.wait(0.3)
+    runScripts()
+end)
+
+-- ========== Close Button ==========
+closeBtn.MouseButton1Click:Connect(function()
+    tween(mainFrame, 0.3, {
+        Size = UDim2.new(0, 500, 0, 0),
+        Position = UDim2.new(0.5, 0, 0.5, 50)
+    })
+    tween(dimmer, 0.3, {BackgroundTransparency = 1})
+    task.wait(0.35)
+    screenGui:Destroy()
+end)
+
+-- ========== Drag System ==========
+local dragging = false
+local dragStart, startPos
+
+topBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = mainFrame.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        local delta = input.Position - dragStart
+        mainFrame.Position = UDim2.new(
+            startPos.X.Scale, startPos.X.Offset + delta.X,
+            startPos.Y.Scale, startPos.Y.Offset + delta.Y
+        )
+    end
+end)
+
+-- ========== Glow Animation ==========
+task.spawn(function()
+    while screenGui.Parent do
+        tween(glowFrame, 2, {BackgroundTransparency = 0.7})
+        task.wait(2)
+        tween(glowFrame, 2, {BackgroundTransparency = 0.9})
+        task.wait(2)
+    end
+end)
+
+print("[GHOST HUB] UI loaded successfully ✓ | Discord link copied to clipboard")
